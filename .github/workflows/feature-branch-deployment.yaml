@@ -41,9 +41,12 @@ jobs:
         run: echo "BRANCH_ID=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
 
       - name: Download CDK output
-        uses: actions/download-artifact@v4
+        uses: dawidd6/action-download-artifact@v3
         with:
           name: cdk-output
+          branch: ${{ env.BRANCH_ID }}
+          workflow: stack-deployment.yaml
+          if_no_artifact_found: fail
 
       - name: Load CDK output
         run: |
