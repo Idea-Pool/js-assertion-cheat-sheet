@@ -42,7 +42,7 @@ jobs:
           cat ./cdk/cdk-outputs.json | jq '.JsAssertionCheatSheet' >> cdk-output.json
 
       - name: Upload CDK output as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: cdk-output
           path: cdk-output.json
