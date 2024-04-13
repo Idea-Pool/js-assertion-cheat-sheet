@@ -38,8 +38,33 @@ jobs:
         run: npm install
 
       - name: Set branch ID
-        run: echo "BRANCH_ID=$(echo ${GITHUB_REF#refs/heads/} | sed 's/[^a-zA-Z0-9]/-/g')" >> $GITHUB_ENV
+        run: echo "BRANCH_ID=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
 
-      - name: Destroy stack
-        working-directory: cdk
-        run: npm run destroy -- JsAssertionCheatSheet-$BRANCH_ID --force --context branch_id=${{ env.BRANCH_ID }}
+      - name: Download CDK output
+        uses: actions/download-artifact@v3
+        with:
+          name: cdk-output
+
+      - name: Load CDK output
+        run: |
+          CDK_OUTPUT=$(cat ./cdk-output.json)
+          echo "AWS_BUCKET_NAME=$(echo $CDK_OUTPUT | jq -r '.BucketName')" >> $GITHUB_ENV
+          echo "AWS_DISTRIBUTION_ID=$(echo $CDK_OUTPUT | jq -r '.DistributionId')" >> $GITHUB_ENV
+
+      - name: Remove from S3
+        uses: vitorsgomes/s3-rm-action@master
+        with:
+          args: --recursive
+        env:
+          AWS_S3_BUCKET: ${{ env.AWS_BUCKET_NAME }}
+          PATH_TO_DELETE: ${{ env.BRANCH_ID }}
+
+      - name: Invalidate CloudFront
+        uses: chetan/invalidate-cloudfront-action@v2
+        env:
+          DISTRIBUTION: ${{ env.AWS_DISTRIBUTION_ID }}
+          PATHS: "/${{ env.BRANCH_ID }}/*"
+
+      - name: Print cleanup result
+        run: |
+          echo "Branch '${{ env.BRANCH_ID }}' has been successfully removed from AWS" >> $GITHUB_STEP_SUMMARY
