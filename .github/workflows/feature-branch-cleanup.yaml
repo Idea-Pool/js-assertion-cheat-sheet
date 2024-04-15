@@ -24,7 +24,7 @@ jobs:
       - name: Setup AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ secrets.AWS_CDK_ROLE_ARN }}
+          role-to-assume: ${{ secrets.AWS_CLI_ROLE_ARN }}
           role-session-name: js-assertion-cheat-sheet-feature-branch-cleanup
           aws-region: ${{ secrets.AWS_REGION }}
 
