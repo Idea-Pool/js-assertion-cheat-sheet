@@ -14,7 +14,7 @@ jobs:
       - name: Check branch name
         run: |
           if [[ "${GITHUB_REF_NAME}" == "main" ]] || ! [[ "${GITHUB_REF_NAME}" =~ ^[0-9]+-.* ]]; then
-            echo "Feature branch deployment can not be initiated on branch '$GITHUB_REF_NAME'" >> $GITHUB_STEP_SUMMARY
+            echo "Feature branch cleanup can not be initiated on branch '$GITHUB_REF_NAME'" >> $GITHUB_STEP_SUMMARY
             exit 0
           fi
 
