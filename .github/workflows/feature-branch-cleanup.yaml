@@ -55,12 +55,8 @@ jobs:
           echo "AWS_DISTRIBUTION_ID=$(echo $CDK_OUTPUT | jq -r '.DistributionId')" >> $GITHUB_ENV
 
       - name: Remove from S3
-        uses: vitorsgomes/s3-rm-action@master
-        with:
-          args: --recursive
-        env:
-          AWS_S3_BUCKET: ${{ env.AWS_BUCKET_NAME }}
-          PATH_TO_DELETE: ${{ env.BRANCH_ID }}
+        run: |
+          aws s3 rm s3://${{ env.AWS_BUCKET_NAME }}/${{ env.BRANCH_ID }} --recursive
 
       - name: Invalidate CloudFront
         uses: chetan/invalidate-cloudfront-action@v2
