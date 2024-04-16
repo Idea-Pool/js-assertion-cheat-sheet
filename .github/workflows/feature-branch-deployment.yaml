@@ -28,15 +28,6 @@ jobs:
           role-session-name: js-assertion-cheat-sheet-feature-branch-deployment
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: lts/*
-
-      - name: Install dependencies
-        working-directory: cdk
-        run: npm install
-
       - name: Set branch ID
         run: echo "BRANCH_ID=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
 
