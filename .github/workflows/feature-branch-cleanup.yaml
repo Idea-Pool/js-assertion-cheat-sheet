@@ -31,28 +31,14 @@ jobs:
       - name: Set branch ID
         run: echo "BRANCH_ID=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
 
-      - name: Download CDK output
-        uses: dawidd6/action-download-artifact@v3
-        with:
-          name: cdk-output
-          branch: ${{ env.BRANCH_ID }}
-          workflow: stack-deployment.yaml
-          if_no_artifact_found: fail
-
-      - name: Load CDK output
-        run: |
-          CDK_OUTPUT=$(cat ./cdk-output.json)
-          echo "AWS_BUCKET_NAME=$(echo $CDK_OUTPUT | jq -r '.BucketName')" >> $GITHUB_ENV
-          echo "AWS_DISTRIBUTION_ID=$(echo $CDK_OUTPUT | jq -r '.DistributionId')" >> $GITHUB_ENV
-
       - name: Remove from S3
         run: |
-          aws s3 rm s3://${{ env.AWS_BUCKET_NAME }}/${{ env.BRANCH_ID }} --recursive
+          aws s3 rm s3://${{ vars.AWS_BUCKET_NAME }}/${{ env.BRANCH_ID }} --recursive
 
       - name: Invalidate CloudFront
         uses: chetan/invalidate-cloudfront-action@v2
         env:
-          DISTRIBUTION: ${{ env.AWS_DISTRIBUTION_ID }}
+          DISTRIBUTION: ${{ vars.AWS_DISTRIBUTION_ID }}
           PATHS: "/${{ env.BRANCH_ID }}/*"
 
       - name: Print cleanup result

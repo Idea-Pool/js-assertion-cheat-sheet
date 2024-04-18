@@ -36,3 +36,11 @@ jobs:
       - name: Destroy Stack
         working-directory: cdk
         run: npm run destroy -- --force
+
+      - name: Remove repository variables
+        env:
+          GH_TOKEN: ${{ secrets.GH_VARIABLES_TOKEN }}
+        run: |
+          gh variable delete AWS_BUCKET_NAME
+          gh variable delete AWS_DISTRIBUTION_ID
+          gh variable delete AWS_WEBSITE_URL

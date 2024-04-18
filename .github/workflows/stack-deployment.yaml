@@ -1,7 +1,7 @@
 name: Stack Deployment
 
 on:
-  push:
+  workflow_dispatch:
 
 permissions:
   id-token: write
@@ -37,12 +37,17 @@ jobs:
         working-directory: cdk
         run: npm run deploy -- --require-approval never --outputs-file ./cdk-outputs.json
 
-      - name: Store CDK output
+      - name: Set CDK variables
         run: |
-          cat ./cdk/cdk-outputs.json | jq '.JsAssertionCheatSheet' >> cdk-output.json
+          CDK_OUTPUT=$(cat ./cdk/cdk-outputs.json | jq '.JsAssertionCheatSheet')
+          echo "AWS_BUCKET_NAME=$(echo $CDK_OUTPUT | jq -r '.BucketName')" >> $GITHUB_ENV
+          echo "AWS_WEBSITE_URL=$(echo $CDK_OUTPUT | jq -r '.WebsiteUrl')" >> $GITHUB_ENV
+          echo "AWS_DISTRIBUTION_ID=$(echo $CDK_OUTPUT | jq -r '.DistributionId')" >> $GITHUB_ENV
 
-      - name: Upload CDK output as artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: cdk-output
-          path: cdk-output.json
+      - name: Set repository variables
+        env:
+          GH_TOKEN: ${{ secrets.GH_VARIABLES_TOKEN }}
+        run: |
+          gh variable set AWS_BUCKET_NAME --body "${{ env.AWS_BUCKET_NAME }}"
+          gh variable set AWS_DISTRIBUTION_ID --body "${{ env.AWS_DISTRIBUTION_ID }}"
+          gh variable set AWS_WEBSITE_URL --body "${{ env.AWS_WEBSITE_URL }}"
