@@ -7,7 +7,9 @@ This repository contains examples of various, often used, and tricky assertions 
 ### Feature Branch deployment
 
 > [!IMPORTANT]  
-> Before deploying any feature branches, make sure that the AWS CDK Stack is already deployed.
+> Before deploying any feature branches, ensure that the AWS CDK Stack is already deployed.
+> 
+> Currently, this can be verified by checking that no [Stack Destroy](https://github.com/Idea-Pool/js-assertion-cheat-sheet/actions/workflows/stack-destroy.yaml) workflow executions have occurred since the last [Stack Deployment](https://github.com/Idea-Pool/js-assertion-cheat-sheet/actions/workflows/stack-deployment.yaml) workflow execution.
 
 #### Deploying a Feature Branch
 
