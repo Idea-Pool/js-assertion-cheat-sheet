@@ -2,45 +2,63 @@ name: Feature Branch Deployment
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - '[0-9]+-**'
 
 permissions:
   id-token: write
   contents: read
 
 jobs:
-  deploy:
+  check_branch_name:
+    name: Check branch name
     runs-on: ubuntu-latest
     steps:
       - name: Check branch name
+        if: github.event_name == 'workflow_dispatch'
         run: |
-          if [[ "${GITHUB_REF_NAME}" == "main" ]] || ! [[ "${GITHUB_REF_NAME}" =~ ^[0-9]+-.* ]]; then
+          if ! [[ "${GITHUB_REF_NAME}" =~ ^[0-9]+-.* ]]; then
             echo "Feature branch deployment can not be initiated on branch '$GITHUB_REF_NAME'" >> $GITHUB_STEP_SUMMARY
-            exit 0
+            exit 1
           fi
 
-      - name: Checkout repository
+  build:
+    name: Build site
+    runs-on: ubuntu-latest
+    needs: check_branch_name
+    steps:
+      - name: Clone repository
         uses: actions/checkout@v4
 
-      - name: Setup AWS credentials
+      - name: Get branch name
+        id: get_branch
+        run: echo "branch_id=$GITHUB_REF_NAME" >> $GITHUB_OUTPUT
+
+  deploy:
+    name: Deploy feature branch
+    runs-on: ubuntu-latest
+    needs: build
+    env:
+      BRANCH_ID: ${{ needs.build.outputs.branch_id }}
+    steps:
+      - name: Configure AWS CLI credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_CLI_ROLE_ARN }}
           role-session-name: js-assertion-cheat-sheet-feature-branch-deployment
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Set branch ID
-        run: echo "BRANCH_ID=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
+      - name: Deploy to S3
+        run: aws s3 sync ./build s3://${{ env.AWS_BUCKET_NAME }}/${{ env.BRANCH_ID }} --no-progress --follow-symlinks --delete
 
-      - name: Deploy site to S3
-        run: aws s3 sync ./build s3://${{ vars.AWS_BUCKET_NAME }}/${{ env.BRANCH_ID }} --no-progress --follow-symlinks --delete
-
-      - name: Invalidate CloudFront
+      - name: Invalidate Cloudfront
         uses: chetan/invalidate-cloudfront-action@v2
         env:
-          DISTRIBUTION: ${{ vars.AWS_DISTRIBUTION_ID }}
+          DISTRIBUTION: ${{ env.AWS_DISTRIBUTION_ID }}
           PATHS: "/${{ env.BRANCH_ID }}/*"
 
-      - name: Print deployed branch URL
+      - name: Print deployed URL
         run: |
-          URL="${{ vars.AWS_WEBSITE_URL }}/${{ env.BRANCH_ID }}"
+          URL="${{ env.AWS_WEBSITE_URL }}/${{ env.BRANCH_ID }}"
           echo "Branch '${{ env.BRANCH_ID }}' has been successfully deployed: $URL" >> $GITHUB_STEP_SUMMARY
