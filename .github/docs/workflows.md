@@ -1,17 +1,17 @@
-# Github Actions CI/CD Workflows
+# GitHub Actions CI/CD Workflows
 
 All the diagrams can be found in [planned-pipelines.drawio](./planned-pipelines.drawio).  
 There are 2 environments for the application: github-pages (considered as Production) and aws-development (considered as a Development environment).  
 ![Overview of workflows](./high-level-diagram.drawio.png)  
 
 ## Main branch workflows
-Main branch workflows are Github Actions Workflows which are executed only for the `main` branch.  
+Main branch workflows are GitHub Actions Workflows which are executed only for the `main` branch.  
 
-### Production (Github Pages)
-This workflow builds and deploys the application to Github Pages.  
+### Production (GitHub Pages)
+This workflow builds and deploys the application to GitHub Pages.  
 The environment is set to `github-pages` so its possible to track deployments on Github.
 
-![Github Pages workflow](./main-deploy.drawio.png)  
+![GitHub Pages workflow](./main-deploy.drawio.png)  
 
 ### Development (Amazon Web Services)
 There are 2 workflows for the development environment & main branch: stack deploy and stack destroy workflows. They both use the `aws-development` environment.
