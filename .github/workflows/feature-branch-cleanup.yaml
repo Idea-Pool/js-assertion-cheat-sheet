@@ -11,11 +11,13 @@ permissions:
 
 jobs:
   cleanup:
+    environment:
+      name: aws-development
     name: Clean up feature branch
     runs-on: ubuntu-latest
     steps:
       - name: Get branch name
-        run: echo "BRANCH_ID=${{ github.event.ref#refs/heads/ }}" >> $GITHUB_ENV
+        run: echo "BRANCH_ID=${GITHUB_REF_NAME}" >> $GITHUB_ENV
 
       - name: Configure AWS CLI credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -26,13 +28,16 @@ jobs:
 
       - name: Delete branch folder from S3
         run: |
-          aws s3 rm s3://${{ env.AWS_BUCKET_NAME }}/${{ env.BRANCH_ID }} --recursive
+          aws s3 rm s3://${{ vars.AWS_BUCKET_NAME }}/${{ env.BRANCH_ID }} --recursive
 
       - name: Invalidate Cloudfront
         uses: chetan/invalidate-cloudfront-action@v2
         env:
-          DISTRIBUTION: ${{ env.AWS_DISTRIBUTION_ID }}
+          DISTRIBUTION: ${{ vars.AWS_DISTRIBUTION_ID }}
           PATHS: "/${{ env.BRANCH_ID }}/*"
+
+      - name: Healthcheck # Scope of https://github.com/orgs/Idea-Pool/projects/4/views/1?pane=issue&itemId=56848307
+        run: echo "healthcheck"
 
       - name: Deactivate deployment
         uses: strumwolf/delete-deployment-environment@v2

@@ -1,7 +1,6 @@
 name: Stack Deployment
 
 on:
-  workflow_dispatch:
   push:
     branches:
       - main

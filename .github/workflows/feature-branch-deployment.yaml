@@ -11,17 +11,18 @@ permissions:
   contents: read
 
 jobs:
-  build:
+  build: # Incomplete, scope of https://github.com/orgs/Idea-Pool/projects/4/views/1?pane=issue&itemId=10153808
     name: Build site
     runs-on: ubuntu-latest
     steps:
       - name: Clone repository
         uses: actions/checkout@v4
-      - name: Archive Build
+      - name: Archive Build # This archives the build folder, for now its just an index.html
         uses: actions/upload-artifact@v4
         with:
           name: site
           path: build
+          retention-days: 1
 
   deploy:
     environment:
@@ -33,11 +34,13 @@ jobs:
       - name: Get branch name
         id: get_branch
         run: echo "BRANCH_ID=${GITHUB_REF_NAME}" >> $GITHUB_ENV
+
       - name: Download build artifact
         uses: actions/download-artifact@v4
         with:
           name: site
           path: build
+
       - name: Configure AWS CLI credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -53,6 +56,9 @@ jobs:
         env:
           DISTRIBUTION: ${{ vars.AWS_DISTRIBUTION_ID }}
           PATHS: "/${{ env.BRANCH_ID }}/*"
+
+      - name: Healthcheck # Scope of https://github.com/orgs/Idea-Pool/projects/4/views/1?pane=issue&itemId=56848307
+        run: echo "healthcheck"
 
       - name: Print deployed URL
         run: |
