@@ -16,13 +16,13 @@ jobs:
         id: get-username
         run: echo "USERNAME=${{ github.actor }}" >> $GITHUB_ENV
 
+      - name: Clone repository
+        uses: actions/checkout@v4
+
       - name: Check if user is in CODEOWNERS
         env:
           GH_TOKEN: ${{ secrets.GH_VARIABLES_TOKEN }}
         run: .github/scripts/codeowners.sh ${{ env.USERNAME }}
-
-      - name: Clone repository
-        uses: actions/checkout@v4
 
       - name: Configure AWS CLI credentials
         uses: aws-actions/configure-aws-credentials@v4
