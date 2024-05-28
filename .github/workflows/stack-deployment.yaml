@@ -50,7 +50,7 @@ jobs:
             # CDK output
 
             ```json
-            $env.CDK_OUTPUT
+            $CDK_OUTPUT
             ```
 
       - name: Set CDK variables
