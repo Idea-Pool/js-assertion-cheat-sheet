@@ -30,10 +30,14 @@ jobs:
     steps:
       - name: Clone repository
         uses: actions/checkout@v4
-
       - name: Get branch name
         id: get_branch
         run: echo "branch_id=$GITHUB_REF_NAME" >> $GITHUB_OUTPUT
+      - name: Archive Build
+        uses: actions/upload-artifact@v4
+        with:
+          name: site
+          path: build
 
   deploy:
     name: Deploy feature branch
@@ -42,6 +46,10 @@ jobs:
     env:
       BRANCH_ID: ${{ needs.build.outputs.branch_id }}
     steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: site
       - name: Configure AWS CLI credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
