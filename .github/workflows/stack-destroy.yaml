@@ -1,6 +1,7 @@
 name: Stack Destroy
 
-on: [workflow_dispatch]
+on:
+  workflow_dispatch
 
 permissions:
   id-token: write
