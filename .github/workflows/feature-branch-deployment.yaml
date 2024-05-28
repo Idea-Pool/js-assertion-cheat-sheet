@@ -50,6 +50,8 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: site
+      - name: Debug step
+        run: ls -R .
       - name: Configure AWS CLI credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
