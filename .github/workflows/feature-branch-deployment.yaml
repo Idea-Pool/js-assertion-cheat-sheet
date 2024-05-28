@@ -58,7 +58,7 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Deploy to S3
-        run: aws s3 sync ./build s3://${{ env.AWS_BUCKET_NAME }}/${{ env.BRANCH_ID }} --no-progress --follow-symlinks --delete
+        run: aws s3 sync ./site/build s3://${{ env.AWS_BUCKET_NAME }}/${{ env.BRANCH_ID }} --no-progress --follow-symlinks --delete
 
       - name: Invalidate Cloudfront
         uses: chetan/invalidate-cloudfront-action@v2
