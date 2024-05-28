@@ -30,24 +30,24 @@ jobs:
           role-to-assume: ${{ secrets.AWS_CDK_ROLE_ARN }}
           role-session-name: js-assertion-cheat-sheet-stack-destroy
           aws-region: ${{ secrets.AWS_REGION }}
-
-      - name: Setup NodeJS LTS
-        uses: actions/setup-node@v4
-        with:
-          node-version: lts/*
-
-      - name: Install CDK dependencies
-        working-directory: cdk
-        run: npm install
-
-      - name: Destroy Stack
-        working-directory: cdk
-        run: npm run destroy -- --force
-
-      - name: Remove repository variables
-        env:
-          GH_TOKEN: ${{ secrets.GH_VARIABLES_TOKEN }}
-        run: |
-          gh variable delete AWS_BUCKET_NAME --env aws-development
-          gh variable delete AWS_DISTRIBUTION_ID --env aws-development
-          gh variable delete AWS_WEBSITE_URL --env aws-development
+#
+#      - name: Setup NodeJS LTS
+#        uses: actions/setup-node@v4
+#        with:
+#          node-version: lts/*
+#
+#      - name: Install CDK dependencies
+#        working-directory: cdk
+#        run: npm install
+#
+#      - name: Destroy Stack
+#        working-directory: cdk
+#        run: npm run destroy -- --force
+#
+#      - name: Remove repository variables
+#        env:
+#          GH_TOKEN: ${{ secrets.GH_VARIABLES_TOKEN }}
+#        run: |
+#          gh variable delete AWS_BUCKET_NAME --env aws-development
+#          gh variable delete AWS_DISTRIBUTION_ID --env aws-development
+#          gh variable delete AWS_WEBSITE_URL --env aws-development
