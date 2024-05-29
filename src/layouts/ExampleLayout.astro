@@ -1,0 +1,23 @@
+---
+import { Code } from "astro:components";
+import { loadFileContent } from "../scripts/loadJsContent";
+import BaseLayout from "./BaseLayout.astro";
+
+const { slug } = Astro.params;
+const content = await loadFileContent(slug);
+---
+
+<BaseLayout>
+  <slot />
+  {
+    content.map(({ path, content }) => {
+      return (
+        <>
+          <h2>{path}</h2>
+          <Code code={content} lang="js" title={path} />
+        </>
+      );
+    })
+  }
+
+</BaseLayout>
