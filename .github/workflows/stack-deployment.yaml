@@ -1,0 +1,74 @@
+name: Stack Deployment
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'cdk/**'
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    name: Deploy Stack
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS CLI credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_CDK_ROLE_ARN }}
+          role-session-name: js-assertion-cheat-sheet-stack-deployment
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Setup NodeJS LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: Install CDK dependencies
+        working-directory: cdk
+        run: npm install
+
+      - name: Deploy using CDK
+        working-directory: cdk
+        run: npm run deploy -- --require-approval never --outputs-file ./cdk-outputs.json
+
+      - name: Set CDK output
+        working-directory: cdk
+        run: echo "CDK_OUTPUT=$(cat cdk-outputs.json | jq '.JsAssertionCheatSheet')" >> $GITHUB_ENV
+
+      - name: Print CDK output
+        uses: WcAServices/markdown-template-action@v1
+        with:
+          template: |
+            # CDK output
+
+            ```json
+            $CDK_OUTPUT
+            ```
+
+      - name: Set CDK variables
+        run: |
+          echo "AWS_BUCKET_NAME=$(echo $env.CDK_OUTPUT | jq -r '.BucketName')" >> $GITHUB_ENV
+          echo "AWS_WEBSITE_URL=$(echo $env.CDK_OUTPUT | jq -r '.WebsiteUrl')" >> $GITHUB_ENV
+          echo "AWS_DISTRIBUTION_ID=$(echo $env.CDK_OUTPUT | jq -r '.DistributionId')" >> $GITHUB_ENV
+
+      - name: Set GitHub variables
+        env:
+          GH_TOKEN: ${{ secrets.GH_VARIABLES_TOKEN }}
+        run: |
+          gh variable set AWS_BUCKET_NAME --body "${{ env.AWS_BUCKET_NAME }}" --env aws-development
+          gh variable set AWS_DISTRIBUTION_ID --body "${{ env.AWS_DISTRIBUTION_ID }}" --env aws-development
+          gh variable set AWS_WEBSITE_URL --body "${{ env.AWS_WEBSITE_URL }}" --env aws-development
+
+      - name: Archive CDK output JSON
+        uses: actions/upload-artifact@v4
+        with:
+          name: cdk-output
+          path: cdk/cdk-outputs.json
