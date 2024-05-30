@@ -1,7 +1,9 @@
 name: Feature Branch Cleanup
 
 on:
-  workflow_dispatch:
+  delete:
+    branches:
+      - '[0-9]+-**'
 
 permissions:
   id-token: write
@@ -9,38 +11,38 @@ permissions:
 
 jobs:
   cleanup:
+    environment:
+      name: aws-development
+    name: Clean up feature branch
     runs-on: ubuntu-latest
     steps:
-      - name: Check branch name
-        run: |
-          if [[ "${GITHUB_REF_NAME}" == "main" ]] || ! [[ "${GITHUB_REF_NAME}" =~ ^[0-9]+-.* ]]; then
-            echo "Feature branch cleanup can not be initiated on branch '$GITHUB_REF_NAME'" >> $GITHUB_STEP_SUMMARY
-            exit 0
-          fi
+      - name: Get branch name
+        run: echo "BRANCH_ID=${GITHUB_REF_NAME}" >> $GITHUB_ENV
 
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup AWS credentials
+      - name: Configure AWS CLI credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_CLI_ROLE_ARN }}
           role-session-name: js-assertion-cheat-sheet-feature-branch-cleanup
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Set branch ID
-        run: echo "BRANCH_ID=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
-
-      - name: Remove from S3
+      - name: Delete branch folder from S3
         run: |
           aws s3 rm s3://${{ vars.AWS_BUCKET_NAME }}/${{ env.BRANCH_ID }} --recursive
 
-      - name: Invalidate CloudFront
+      - name: Invalidate Cloudfront
         uses: chetan/invalidate-cloudfront-action@v2
         env:
           DISTRIBUTION: ${{ vars.AWS_DISTRIBUTION_ID }}
           PATHS: "/${{ env.BRANCH_ID }}/*"
 
-      - name: Print cleanup result
-        run: |
-          echo "Branch '${{ env.BRANCH_ID }}' has been successfully removed from AWS" >> $GITHUB_STEP_SUMMARY
+      - name: Healthcheck # Scope of https://github.com/orgs/Idea-Pool/projects/4/views/1?pane=issue&itemId=56848307
+        run: echo "healthcheck"
+
+      - name: Deactivate deployment
+        uses: strumwolf/delete-deployment-environment@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          environment: aws-development
+          ref: ${{ env.BRANCH_ID }}
+          onlyDeactivateDeployments: true

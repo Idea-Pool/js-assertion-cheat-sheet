@@ -1,7 +1,7 @@
 name: Stack Destroy
 
 on:
-  workflow_dispatch:
+  workflow_dispatch
 
 permissions:
   id-token: write
@@ -10,26 +10,34 @@ permissions:
 jobs:
   destroy:
     name: Destroy Stack
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    env:
-      AWS_REGION: ${{ secrets.AWS_REGION }}
     steps:
-      - name: Checkout repository
+      - name: Get username of user who triggered the workflow
+        id: get-username
+        run: echo "USERNAME=${{ github.actor }}" >> $GITHUB_ENV
+
+      - name: Clone repository
         uses: actions/checkout@v4
 
-      - name: Setup AWS credentials
+      - name: Check if user is in CODEOWNERS
+        env:
+          GH_TOKEN: ${{ secrets.GH_ORG_TOKEN }}
+        run: .github/scripts/codeowners.sh ${{ env.USERNAME }}
+
+      - name: Configure AWS CLI credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_CDK_ROLE_ARN }}
           role-session-name: js-assertion-cheat-sheet-stack-destroy
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Setup Node.js
+      - name: Setup NodeJS LTS
         uses: actions/setup-node@v4
         with:
           node-version: lts/*
 
-      - name: Install dependencies
+      - name: Install CDK dependencies
         working-directory: cdk
         run: npm install
 
@@ -41,6 +49,6 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_VARIABLES_TOKEN }}
         run: |
-          gh variable delete AWS_BUCKET_NAME
-          gh variable delete AWS_DISTRIBUTION_ID
-          gh variable delete AWS_WEBSITE_URL
+          gh variable delete AWS_BUCKET_NAME --env aws-development
+          gh variable delete AWS_DISTRIBUTION_ID --env aws-development
+          gh variable delete AWS_WEBSITE_URL --env aws-development
