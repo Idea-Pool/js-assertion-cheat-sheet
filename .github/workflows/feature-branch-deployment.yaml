@@ -15,6 +15,10 @@ jobs:
     name: Build site
     runs-on: ubuntu-latest
     steps:
+      - name: Get branch name
+        id: get_branch
+        run: echo "BRANCH_ID=${GITHUB_REF_NAME}" >> $GITHUB_ENV
+
       - name: Clone repository
         uses: actions/checkout@v4
       - name: Use Node.js
