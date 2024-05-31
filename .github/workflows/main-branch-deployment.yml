@@ -19,8 +19,9 @@ env:
   BRANCH_ID: main
 
 permissions:
-  id-token: write # This is required for requesting the JWT
   contents: read # This is required for actions/checkout
+  id-token: write # This is required for requesting the JWT
+  pages: write # This is required for peaceiris/actions-gh-pages
 
 jobs:
   build: # Incomplete, scope of https://github.com/orgs/Idea-Pool/projects/4/views/1?pane=issue&itemId=10153808
