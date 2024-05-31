@@ -2,9 +2,9 @@ name: Feature Branch Deployment
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - '[0-9]+-**'
+#   push:
+#     branches:
+#       - '[0-9]+-**'
 
 permissions:
   id-token: write

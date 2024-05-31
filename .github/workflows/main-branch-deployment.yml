@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - '[0-9]+-**'
     paths-ignore:
       - '**.drawio'
       - '**.md'
@@ -36,7 +37,7 @@ jobs:
           retention-days: 1
   deploy:
     environment:
-      name: aws-development
+      name: github-pages
     name: Deploy main branch
     runs-on: ubuntu-latest
     needs: build
@@ -46,27 +47,5 @@ jobs:
         with:
           name: site
           path: build
-
-      - name: Configure AWS CLI credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: ${{ secrets.AWS_CLI_ROLE_ARN }}
-          role-session-name: js-assertion-cheat-sheet-main-branch-deployment
-          aws-region: ${{ secrets.AWS_REGION }}
-
-      - name: Deploy to S3
-        run: aws s3 sync ./build s3://${{ vars.AWS_BUCKET_NAME }}/${{ env.BRANCH_ID }} --no-progress --follow-symlinks --delete
-
-      - name: Invalidate Cloudfront
-        uses: chetan/invalidate-cloudfront-action@v2
-        env:
-          DISTRIBUTION: ${{ vars.AWS_DISTRIBUTION_ID }}
-          PATHS: "/${{ env.BRANCH_ID }}/*"
-
       - name: Healthcheck # Scope of https://github.com/orgs/Idea-Pool/projects/4/views/1?pane=issue&itemId=56848307
         run: echo "healthcheck"
-
-      - name: Print deployed URL
-        run: |
-          URL="${{ vars.AWS_WEBSITE_URL }}/${{ env.BRANCH_ID }}"
-          echo "Branch '${{ env.BRANCH_ID }}' has been successfully deployed: $URL" >> $GITHUB_STEP_SUMMARY
