@@ -15,13 +15,29 @@ jobs:
     name: Build site
     runs-on: ubuntu-latest
     steps:
+      - name: Get branch name
+        id: get_branch
+        run: echo "BRANCH_ID=${GITHUB_REF_NAME}" >> $GITHUB_ENV
+
       - name: Clone repository
         uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+      - name: Install
+        run: npm ci
+      - name: Build and test
+        run: npm run build
+        env:
+          ASTRO_SITE: ${{ vars.AWS_WEBSITE_URL }}
+          ASTRO_BASE: ${{ env.BRANCH_ID }}
+          PUBLIC_VERSION: v0.1.0-${{ github.sha }}
       - name: Archive Build # This archives the build folder, for now its just an index.html
         uses: actions/upload-artifact@v4
         with:
           name: site
-          path: build
+          path: dist
           retention-days: 1
 
   deploy:

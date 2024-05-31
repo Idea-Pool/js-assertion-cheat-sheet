@@ -1,0 +1,48 @@
+---
+title: Best Practices for JavaScript Assertions
+description:  When it comes to testing and test automation using JavaScript, it's crucial to follow certain best practices. This ensures that we're making the most effective use of our assertions. On this page, we aim to provide an overview of the best practices, their advantages, as well as anti-patterns to steer clear of when using JavaScript assertion tools.
+layout: ../../layouts/WipLayout.astro
+---
+
+Welcome to the Best Practices section of our JS Assertion CheatSheet! When it comes to testing and test automation using JavaScript, it's crucial to follow certain best practices. This ensures that we're making the most effective use of our assertions. On this page, we aim to provide an overview of the best practices, their advantages, as well as anti-patterns to steer clear of when using JavaScript assertion tools.
+
+When crafting assertions, it's vital to think about what you're trying to achieve, and purposefully select the most suitable assertions for your tests. Remember, the goal of any test is to verify that your code works as expected. Therefore, your assertions should help you accomplish this goal conveniently and accurately.
+
+## Good Assertion Practices
+
+### Be Specific
+
+One of the core best practices for writing assertions is to be as specific as possible. Clear, specific assertions make your tests easier to understand and debug.
+
+For instance, when testing the output of a function, instead of checking the type of the returned value, check for an expected value. This makes your test more resistant to irrelevant changes and potential bugs being missed.
+
+```javascript
+// Not recommended
+assert(typeof myFunction() === 'number');
+
+// Recommended
+assert(myFunction() === 42);
+```
+
+## Assertion Anti-patterns
+
+### Multiple Assertions
+
+On the other end of the spectrum, there are practices we should try to avoid when crafting assertions. One such anti-pattern is having multiple assertions in a single test. This can make it unclear what is being tested and also adds complexity in trying to identify exactly where things have gone wrong.
+
+For example, consider a test with several assertions:
+
+```javascript
+test('verify user profile', function(assert) {
+    let user = getUser('testUser');
+    assert(user.username === 'testUser', 'Username is correct');
+    assert(user.age === 30, 'Age is correct');
+    assert(user.location === 'USA', 'Location is correct');
+});
+```
+
+In this case, it would be more effective to break this test into smaller, specific tests. By writing more granular tests, each checking a single aspect of your code, you'll gain more insightful test results and easier debugging.
+
+Remember, the listed practices serve as guidelines and might not always apply. Be mindful of your testing needs and use your judgement. Test and assertions should be designed to improve code quality, readability and maintainability.
+
+Stay tuned as this is just the beginning - we’ll continue to delve deeper into more best and anti-pattern practices for JavaScript assertions. Happy testing!
