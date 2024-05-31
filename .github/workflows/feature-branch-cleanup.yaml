@@ -16,9 +16,12 @@ jobs:
     name: Clean up feature branch
     runs-on: ubuntu-latest
     steps:
-      - name: Get branch name
-        run: echo "BRANCH_ID=${GITHUB_REF_NAME}" >> $GITHUB_ENV
 
+      - name: Extract branch name
+        shell: bash
+        run: | 
+          BRANCH=$(cat ${{ github.event_path }} | jq --raw-output '.ref')
+          echo "BRANCH_ID=${BRANCH#refs/heads/}" >> $GITHUB_ENV
       - name: Configure AWS CLI credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
