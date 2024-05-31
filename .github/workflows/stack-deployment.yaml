@@ -41,7 +41,7 @@ jobs:
 
       - name: Set CDK output
         working-directory: cdk
-        run: echo "CDK_OUTPUT=$(cat cdk-outputs.json | jq '.JsAssertionCheatSheet')" >> $GITHUB_ENV
+        run: echo "CDK_OUTPUT=$(cat cdk-outputs.json | jq -c '.JsAssertionCheatSheet')" >> $GITHUB_ENV
 
       - name: Print CDK output
         uses: WcAServices/markdown-template-action@v1
