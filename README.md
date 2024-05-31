@@ -37,3 +37,14 @@ Deploy the stack by manually executing the [Stack Deployment](https://github.com
 #### Destroying the stack
 
 Destroy the stack manually with the [Stack Destroy](https://github.com/Idea-Pool/js-assertion-cheat-sheet/actions/workflows/stack-destroy.yaml) workflow.
+
+## How to build and run the application
+
+All commands are run from the root of the project, from a terminal:
+
+| Command                   | Action                                           |
+| :------------------------ | :----------------------------------------------- |
+| `npm install`             | Installs dependencies                            |
+| `npm run dev`             | Starts local dev server at `localhost:4321`      |
+| `npm run build`           | Build your production site to `./dist/`          |
+| `npm run preview`         | Preview your build locally, before deploying     |
