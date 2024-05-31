@@ -9,7 +9,6 @@ export default defineConfig({
   site: process.env.ASTRO_SITE,
   base: process.env.ASTRO_BASE,
   integrations: [
-
     starlight({
       title: "JS Assertion Cheat Sheet",
       editLink: {
