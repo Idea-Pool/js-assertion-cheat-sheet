@@ -22,11 +22,22 @@ jobs:
     steps:
       - name: Clone repository
         uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+      - name: Install
+        run: npm ci
+      - name: Build and test
+        run: npm run build
+        env:
+          ASTRO_SITE: https://js-assertion.ideapool.community
+          PUBLIC_VERSION: v0.1.0-${{ github.sha }}
       - name: Archive Build # This archives the build folder, for now its just an index.html
         uses: actions/upload-artifact@v4
         with:
           name: site
-          path: build
+          path: dist
           retention-days: 1
   deploy:
     environment:
@@ -39,12 +50,12 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: site
-          path: build
+          path: dist
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build
+          publish_dir: ./dist
       - name: Healthcheck # Scope of https://github.com/orgs/Idea-Pool/projects/4/views/1?pane=issue&itemId=56848307
         run: echo "healthcheck"
       - name: Print deployed URL
