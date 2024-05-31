@@ -1,8 +1,4 @@
----
-title: Contribution Guideline
-description: Your expertise and experience in sharing insights regarding the world of JavaScript Assertion tools will tremendously enhance the value this guide offers to a wide range of developers.
-layout: ../../layouts/BaseLayout.astro
----
+# Contribution Guideline
 
 We sincerely thank you in advance for your interest in contributing to the **JS Assertion CheatSheet**. Your expertise and experience in sharing insights regarding the world of JavaScript Assertion tools will tremendously enhance the value this guide offers to a wide range of developers. Follow these guidelines to contribute:
 

@@ -9,23 +9,27 @@ export default defineConfig({
   integrations: [
 
     starlight({
-      title: "My Docs",
+      title: "JS Assertion Cheat Sheet",
       editLink: {
-        baseUrl: "https://github.com/idea-pool/js-assertion-cheat-sheet-astro/edit/main/docs/",
+        baseUrl: "https://github.com/idea-pool/js-assertion-cheat-sheet/edit/main/src/content/docs/",
       },
       social: {
         github: "https://github.com/idea-pool",
       },
       sidebar: [
         {
-          label: "Home",
+          label: "Introduction",
           link: "/",
+        },
+        ...sidebarGroups,
+        {
+          label: "Best Practices",
+          link: "/practices",
         },
         {
           label: "Contribution",
           link: "/contribution",
         },
-        ...sidebarGroups,
       ],
       components: {
         Footer: './src/components/Footer.astro',

@@ -2,6 +2,8 @@ import fs from "node:fs/promises";
 
 const path = "./src/content/docs";
 
+const ucfirst = s => s[0].toUpperCase() + s.slice(1);
+
 export const createSidebarGroups = async () => {
   const dirs = await fs.readdir(path);
   const subDirectories = [];
@@ -15,7 +17,7 @@ export const createSidebarGroups = async () => {
 
   return subDirectories.map((directory) => {
     return {
-      label: directory,
+      label: ucfirst(directory),
       collapsed: true,
       autogenerate: {
         directory,

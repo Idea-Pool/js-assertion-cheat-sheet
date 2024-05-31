@@ -1,12 +1,80 @@
 ---
-title: Assertion types
+title: Assertions
 description: Assertions general overview
 layout: ../../../layouts/BaseLayout.astro
 ---
 
-## General description
-Sed vel interdum sem. Donec ac lobortis sem. Ut sed venenatis purus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Curabitur tristique mattis leo, sodales placerat magna imperdiet at. Suspendisse velit est, varius quis tincidunt quis, placerat at lacus. Pellentesque quis arcu nec risus sagittis faucibus et vel magna. Morbi vulputate felis arcu, quis sodales diam dictum eget. Nulla facilisi. Fusce in dui scelerisque ipsum porta bibendum eu sed erat. Donec quis ipsum sapien. In luctus mattis cursus. Praesent ut nunc vitae purus eleifend commodo. Sed at vulputate risus, varius sodales risus. Praesent aliquet nisl magna, sed dictum odio sagittis eget.
+import { Card, CardGrid } from "@astrojs/starlight/components";
 
-Aenean sed urna volutpat, lobortis nisl a, faucibus sem. Ut eget est non libero eleifend aliquam vel vel tellus. Nunc ullamcorper sagittis nulla, sit amet aliquam purus lacinia eu. Mauris elementum consectetur metus eu rutrum. Maecenas eget enim vitae massa interdum vulputate tristique vitae metus. Cras vel aliquam ante. Sed aliquam, mauris sit amet imperdiet vestibulum, felis ipsum pulvinar nisi, vel commodo ex dolor id lorem. Cras tempor odio eget mauris accumsan mollis faucibus quis neque. Praesent dictum turpis tincidunt arcu mattis egestas. Ut mollis, elit accumsan convallis eleifend, mi sem vehicula lorem, et elementum augue magna id felis.
+Welcome to the Assertions section of our JS Assertion CheatSheet! As you embark on your journey of mastering JavaScript assertion tools, it's crucial to lay a strong foundation by understanding what assertions are and why they're important.
 
-Morbi ac luctus nisi. Phasellus efficitur orci in elit efficitur feugiat. Fusce at sollicitudin erat. Duis porttitor nisl et lacus pharetra placerat. Integer a elit nibh. Curabitur lorem quam, dapibus eget lacinia vel, vestibulum a turpis. Quisque maximus imperdiet erat. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Sed iaculis molestie urna, vel commodo est commodo vitae. Aliquam ac lorem tristique, accumsan ex in, tristique metus. Cras bibendum risus tortor, sed vulputate nunc dignissim at. Phasellus eu pharetra libero.
+## What Are Assertions?
+
+An assertion in programming is a declarative statement that asserts that a certain condition is true. If the condition returns true, the program continues to execute as expected. If the condition returns false, the program typically throws an assertion error and often terminates.
+
+In the context of testing, assertions serve as checkpoints that validate if the outcome of a tested operation matches our expectations. They form the basis of most types of automated testing, including unit testing, integration testing, and end-to-end testing.
+
+In JavaScript, we use various assertion libraries (like Chai, Assert, etc.) that provide different types of assertions, such as equal, notEqual, deepEqual and many more.
+
+## Why Are Assertions Important?
+
+Assertions serve as powerful tools for debugging and testing code because they enable us to:
+
+1. **Check Invariants:** Assertions help confirm that the program's state aligns with our expectations at particular points during execution.
+2. **Simplify Debugging:** If a bug causes an assertion failure, you've successfully localized the bug to a specific point in the program, which makes the debugging process easier.
+3. **Improve Code Quality:** Planned assertion usage can lead to cleaner, less error-prone code. They serve as validation checks that prompt necessary actions to be taken to ensure smooth code execution.
+4. **Document Assumptions:** Assertions can be used to document assumptions made at certain points in the code about how variables should behave. This can be highly useful for understanding the logic behind the code.
+5. **Automated Testing:** Assertions form the backbone of test cases. They define the criteria of success for each test, allowing us to automate the validation process.
+
+Navigating the world of JavaScript assertions may seem daunting at first, but with practice, you'll find assertions to be a game-changer for your testing strategy. This guide aims to support you in this journey, serving as a handy resource to explore different assertion tools and practices.
+
+## Assertion Categories
+
+When it comes to JavaScript assertions, they can be categorized based on their purpose, scope or functionality. Here's an insight into these various categories:
+  
+<CardGrid>
+    <Card title="Relational Assertions" icon="up-caret">
+        <p>Compare two values or objects in terms of their relative magnitude</p>
+        <a href="./relational">Learn more</a>
+    </Card>
+    <Card title="Equality Assertions" icon="right-caret">
+        <p>Used to compare two values or objects for equality or inequality</p>
+        <a href="./equality">Learn more</a>
+    </Card>
+    <Card title="Array Assertions" icon="bars">
+        <p>Verify the state or length of an array, and its contents</p>
+        <a href="./array">Learn more</a>
+    </Card>
+    <Card title="String Assertions" icon="pencil">
+        <p>Verify the state of a string, its length, or match against patterns</p>
+        <a href="./string">Learn more</a>
+    </Card>
+    <Card title="Date Assertions" icon="sun">
+        <p>Compare and verify the state of date objects</p>
+        <a href="./date">Learn more</a>
+    </Card>
+    <Card title="Exception Assertions" icon="warning">
+        <p>Check if a function throws a specific exception</p>
+        <a href="./exception">Learn more</a>
+    </Card>
+    <Card title="Property Assertions" icon="document">
+        <p>Verify the state of an object's property</p>
+        <a href="./property">Learn more</a>
+    </Card>
+    <Card title="Asynchronous Assertions" icon="rocket">
+        <p>Verify the resolution state of a promise</p>
+        <a href="./asynchronous">Learn more</a>
+    </Card>
+    <Card title="Behavior Assertions" icon="puzzle">
+        <p>Check the behavior of a function or object</p>
+        <a href="./behavior">Learn more</a>
+    </Card>
+    <Card title="UI Assertions" icon="laptop">
+        <p>Verify the state of a user interface</p>
+        <a href="./ui">Learn more</a>
+    </Card>
+    <Card title="API Assertions" icon="open-book">
+        <p>Verify responses from API calls</p>
+        <a href="./api">Learn more</a>
+    </Card>
+</CardGrid>
