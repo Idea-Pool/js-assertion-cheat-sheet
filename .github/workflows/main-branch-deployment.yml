@@ -5,7 +5,7 @@ on:
   push:
     branches:
       - main
-      - '[0-9]+-**'
+      - '[0-9]+-**' # FOR TESTING
     paths-ignore:
       - '**.drawio'
       - '**.md'
@@ -47,5 +47,14 @@ jobs:
         with:
           name: site
           path: build
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build
       - name: Healthcheck # Scope of https://github.com/orgs/Idea-Pool/projects/4/views/1?pane=issue&itemId=56848307
         run: echo "healthcheck"
+      - name: Print deployed URL
+        run: |
+          URL="https://${{ github.repository_owner }}.github.io/${{ github.repository }}/${{ env.BRANCH_ID }}"
+          echo "Branch '${{ env.BRANCH_ID }}' has been successfully deployed: $URL" >> $GITHUB_STEP_SUMMARY
