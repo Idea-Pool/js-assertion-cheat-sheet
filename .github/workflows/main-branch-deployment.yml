@@ -5,23 +5,15 @@ on:
   push:
     branches:
       - main
-      - '[0-9]+-**' # FOR TESTING
     paths-ignore:
       - '**.drawio'
       - '**.md'
       - '**.png'
-  pull_request:
-    branches:
-      - main
-    types: [closed]
-
-env:
-  BRANCH_ID: main
 
 permissions:
-  contents: write # This is required for actions/checkout
-  id-token: write # This is required for requesting the JWT
-  pages: write # This is required for peaceiris/actions-gh-pages
+  contents: write
+  id-token: write
+  pages: write
 
 jobs:
   build: # Incomplete, scope of https://github.com/orgs/Idea-Pool/projects/4/views/1?pane=issue&itemId=10153808
@@ -57,5 +49,5 @@ jobs:
         run: echo "healthcheck"
       - name: Print deployed URL
         run: |
-          URL="https://${{ github.repository_owner }}.github.io/${{ github.repository }}/${{ env.BRANCH_ID }}"
-          echo "Branch '${{ env.BRANCH_ID }}' has been successfully deployed: $URL" >> $GITHUB_STEP_SUMMARY
+          URL="https://js-assertion.ideapool.community/"
+          echo "Branch main has been successfully deployed: $URL" >> $GITHUB_STEP_SUMMARY
