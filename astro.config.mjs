@@ -17,6 +17,10 @@ export default defineConfig({
       social: {
         github: "https://github.com/idea-pool",
       },
+      logo:{
+        src: './src/assets/idea-pool.png',
+      },
+      favicon: './src/assets/idea-pool.png',
       sidebar: [
         {
           label: "Introduction",
