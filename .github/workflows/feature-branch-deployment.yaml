@@ -26,8 +26,8 @@ jobs:
       - name: Build and test
         run: npm run build
         env:
-          ASTRO_SITE: https://idea-pool.github.io/
-          ASTRO_BASE: js-assertion-cheat-sheet
+          ASTRO_SITE: ${{ vars.AWS_WEBSITE_URL }}
+          ASTRO_BASE: ${{ env.BRANCH_ID }}
           PUBLIC_VERSION: v0.1.0-${{ github.sha }}
       - name: Archive Build # This archives the build folder, for now its just an index.html
         uses: actions/upload-artifact@v4
