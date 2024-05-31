@@ -6,8 +6,8 @@ const sidebarGroups = await createSidebarGroups();
 
 // https://astro.build/config
 export default defineConfig({
-  site: import.meta.env.ASTRO_SITE,
-  base: import.meta.env.ASTRO_BASE,
+  site: process.env.ASTRO_SITE,
+  base: process.env.ASTRO_BASE,
   integrations: [
 
     starlight({
