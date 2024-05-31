@@ -20,7 +20,7 @@ export default defineConfig({
       logo:{
         src: './src/assets/idea-pool.png',
       },
-      favicon: './src/assets/idea-pool.png',
+      favicon: '/idea-pool.png',
       sidebar: [
         {
           label: "Introduction",
